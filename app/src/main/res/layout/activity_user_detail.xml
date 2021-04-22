@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".userDetail">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="#E6000000"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name:"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:id="@+id/Naam"
+        app:layout_constraintTop_toTopOf="@id/NaamEditText"
+        app:layout_constraintBottom_toBottomOf="@id/NaamEditText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="10dp"
+        />
+
+    <EditText
+        android:id="@+id/NaamEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/allroundedge"
+        android:backgroundTint="@color/column"
+        android:minHeight="50dp"
+        android:padding="15dp"
+        android:text=""
+        android:textAlignment="center"
+        app:layout_constraintLeft_toRightOf="@id/PhoneNumber"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone No:"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:id="@+id/PhoneNumber"
+        app:layout_constraintTop_toTopOf="@id/PhoneEditText"
+        app:layout_constraintBottom_toBottomOf="@id/PhoneEditText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="10dp"
+        />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/allroundedge"
+        app:layout_constraintLeft_toRightOf="@id/PhoneNumber"
+        app:layout_constraintRight_toRightOf="parent"
+        android:backgroundTint="@color/column"
+        android:layout_marginLeft="10dp"
+        android:minHeight="50dp"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@id/NaamEditText"
+        android:layout_marginTop="40dp"
+        android:id="@+id/PhoneEditText"
+        android:textAlignment="center"
+        android:padding="15dp"
+        android:inputType="number"
+        android:hint="10 digit number"
+        android:maxLength="10"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="House No:"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:id="@+id/HouseNo"
+        app:layout_constraintTop_toTopOf="@id/HouseNoEditText"
+        app:layout_constraintBottom_toBottomOf="@id/HouseNoEditText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="10dp"
+        />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/allroundedge"
+        app:layout_constraintLeft_toRightOf="@id/PhoneNumber"
+        app:layout_constraintRight_toRightOf="parent"
+        android:backgroundTint="@color/column"
+        android:layout_marginLeft="10dp"
+        android:minHeight="50dp"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@id/PhoneEditText"
+        android:layout_marginTop="40dp"
+        android:id="@+id/HouseNoEditText"
+        android:textAlignment="center"
+        android:padding="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Landmark:"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:id="@+id/Landmark"
+        app:layout_constraintTop_toTopOf="@id/landmarkEditText"
+        app:layout_constraintBottom_toBottomOf="@id/landmarkEditText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="10dp"
+        />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/allroundedge"
+        app:layout_constraintLeft_toRightOf="@id/PhoneNumber"
+        app:layout_constraintRight_toRightOf="parent"
+        android:backgroundTint="@color/column"
+        android:layout_marginLeft="10dp"
+        android:minHeight="50dp"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@id/HouseNoEditText"
+        android:layout_marginTop="40dp"
+        android:id="@+id/landmarkEditText"
+        android:textAlignment="center"
+        android:padding="15dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/lessrounded"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        app:backgroundTint="@color/white"
+        android:text="Submit"
+        android:textColor="@color/black"
+        android:id="@+id/submit"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/lessrounded"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="10dp"
+        app:backgroundTint="@color/white"
+        android:text="Cancel"
+        android:textColor="@color/black"
+        android:id="@+id/cancel"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

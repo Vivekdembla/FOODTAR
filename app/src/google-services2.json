@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "838551808217",
+    "project_id": "vegtar-f0ecc",
+    "storage_bucket": "vegtar-f0ecc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838551808217:android:7aba697d0c195ad38036c8",
+        "android_client_info": {
+          "package_name": "com.food.vegtar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838551808217-mg9ih4jfa604ud8ta87g785t35ma19gj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALCIaLWwCYstYbJ4pyYkkdK4Geez5pFfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838551808217-mg9ih4jfa604ud8ta87g785t35ma19gj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
