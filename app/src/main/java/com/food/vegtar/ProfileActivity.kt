@@ -1,10 +1,13 @@
 package com.food.vegtar
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.food.vegtar.Dao.userDao
@@ -28,6 +31,8 @@ class ProfileActivity : AppCompatActivity() {
     lateinit var userDao: userDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         setContentView(R.layout.activity_profile)
         val userImage = findViewById<ImageView>(R.id.userImage)
         userName = findViewById(R.id.userName)

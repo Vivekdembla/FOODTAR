@@ -2,14 +2,18 @@ package com.food.vegtar
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import android.content.SharedPreferences
 import android.opengl.Visibility
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,9 +35,14 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
     lateinit var adapter:CartAdapter
     lateinit var dialog: Dialog
     lateinit var cartRecyclerView:RecyclerView
+    lateinit var orderNow:Button
+    lateinit var cartItem:List<OrderDetail>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         setContentView(R.layout.activity_cart)
+        orderNow = findViewById(R.id.orderNow)
         cartRecyclerView = findViewById<RecyclerView>(R.id.cartRecyclerView)
         emptyMessage = findViewById(R.id.emptyMessage)
         loadData()
@@ -58,9 +67,27 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
             list?.let {
                 adapter.updateList(it)
                 updatePrice()
+                cartItem = list
             }
         })
 
+        orderNow.setOnClickListener {
+            val intent = Intent(this,userDetail::class.java)
+            intent.putExtra("fromcart","fromcart")
+            val nameList = ArrayList<String>()
+            val priceList = ArrayList<String>()
+            val quantityList = ArrayList<Int>()
+//            Log.e("Checking",cartItem.size.toString())
+            for(i in 0..cartItem.size-1){
+                nameList.add(cartItem[i].EachFoodName)
+                priceList.add(cartItem[i].EachFoodPrice!!)
+                quantityList.add(cartItem[i].quantity!!)
+            }
+            intent.putStringArrayListExtra("Foodlist",nameList)
+            intent.putStringArrayListExtra("Pricelist",priceList)
+            intent.putIntegerArrayListExtra("Quantitylist",quantityList)
+            startActivity(intent)
+        }
 
         if(shopName!=null){
             if(count!= 0 && shopName!=firstshop){
@@ -77,7 +104,7 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
                 view.findViewById<Button>(R.id.confirm)?.setOnClickListener {
                     viewModel.deleteAll()
                     dialog.dismiss()
-                    val x = OrderDetail(name, price, imageUrl, description, shopName)
+                    val x = OrderDetail(name!!, price, imageUrl, description, shopName)
                     viewModel.insertCart(x)
                     count = 1
                     savecount(count)
@@ -99,7 +126,7 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
 
             }
             else if(count!=0 && shopName==firstshop){
-                val x = OrderDetail(name, price, imageUrl, description, shopName)
+                val x = OrderDetail(name!!, price, imageUrl, description, shopName)
                 Log.e("Checking","count!=0 && shopName==firstshop se add hua h : $shopName")
                 count=count+1
                 savecount(count)
@@ -111,7 +138,7 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
                 savecount(count)
                 loadData()
                 Log.e("Checking","Is time last name is value hai ${firstshop}")
-                val x = OrderDetail(name, price, imageUrl, description, shopName)
+                val x = OrderDetail(name!!, price, imageUrl, description, shopName)
                 Log.e("Checking","count==0 se add hua h : $shopName")
                 viewModel.insertCart(x)
             }
@@ -130,7 +157,7 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
             val x = OrderDetail(adapter.cartItem[position].EachFoodName, adapter.cartItem[position].EachFoodPrice,
                     adapter.cartItem[position].EachFoodUrl, adapter.cartItem[position].EachFoodDes,
                     adapter.cartItem[position].EachShopName, num)
-            x.id = adapter.cartItem[position].id
+//            x.id = adapter.cartItem[position].id
             viewModel.updateCart(x)
         }
     }
@@ -146,7 +173,7 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
             val x = OrderDetail(adapter.cartItem[position].EachFoodName, adapter.cartItem[position].EachFoodPrice,
                     adapter.cartItem[position].EachFoodUrl, adapter.cartItem[position].EachFoodDes,
                     adapter.cartItem[position].EachShopName, num)
-            x.id = adapter.cartItem[position].id
+//            x.id = adapter.cartItem[position].id
             viewModel.updateCart(x)
         }
     }

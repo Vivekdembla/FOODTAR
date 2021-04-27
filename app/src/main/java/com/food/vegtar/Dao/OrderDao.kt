@@ -13,7 +13,7 @@ interface OrderDao {
     @Delete
     suspend fun delete(orderDetail: OrderDetail)
 
-    @Query("Select * from cart_table order by id ASC")
+    @Query("Select * from cart_table order by EachFoodName ASC")
     fun getAllItems(): LiveData<List<OrderDetail>>
 
     @Query("DELETE FROM cart_table")

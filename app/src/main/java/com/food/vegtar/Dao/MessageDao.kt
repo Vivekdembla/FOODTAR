@@ -13,11 +13,13 @@ class MessageDao {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 //    private var userCollection = db.collection("Message")
     private var userCollection = db.collection("Shop")
+    private var userCollection2 = db.collection("users")
 
     fun addMessage(message: Message?){
         message?.let {
             GlobalScope.launch(Dispatchers.IO) {
 //                userCollection.document(message.key).set(it)
+//                userCollection.document("Xr5uHwRLoalMzJAR3HyK").collection("Message").document(id).set(message)
                 userCollection.document("Xr5uHwRLoalMzJAR3HyK").collection("Message").add(message)
             }
         }
@@ -25,5 +27,13 @@ class MessageDao {
 
     fun getUserById(uId: String): Task<DocumentSnapshot> {
         return userCollection.document(uId).get()
+    }
+
+    fun addMessageInUser(uId: String,message: Message?){
+        message?.let {
+            GlobalScope.launch(Dispatchers.IO) {
+                userCollection2.document(uId).collection("Message").add(message)
+            }
+        }
     }
 }
