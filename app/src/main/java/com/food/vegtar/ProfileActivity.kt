@@ -28,6 +28,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userName:TextView
     private lateinit var userNumber:TextView
     private lateinit var editProfile:ImageView
+    private lateinit var orderBack:ImageView
     lateinit var userDao: userDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,7 @@ class ProfileActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         setContentView(R.layout.activity_profile)
         val userImage = findViewById<ImageView>(R.id.userImage)
+        orderBack = findViewById(R.id.orderBack)
         userName = findViewById(R.id.userName)
         userNumber = findViewById(R.id.userNumber)
         editProfile = findViewById(R.id.nameBack)
@@ -44,6 +46,10 @@ class ProfileActivity : AppCompatActivity() {
         Glide.with(userImage.context ).load(currentUser.photoUrl).apply(RequestOptions.circleCropTransform()).into(userImage)
         editProfile.setOnClickListener {
             val intent = Intent(this,userDetail::class.java)
+            startActivity(intent)
+        }
+        orderBack.setOnClickListener {
+            val intent = Intent(this,orderList::class.java)
             startActivity(intent)
         }
     }

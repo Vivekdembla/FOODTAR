@@ -13,7 +13,7 @@ class MessageDao {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 //    private var userCollection = db.collection("Message")
     private var userCollection = db.collection("Shop")
-    private var userCollection2 = db.collection("users")
+    var userCollection2 = db.collection("users")
 
     fun addMessage(message: Message?){
         message?.let {

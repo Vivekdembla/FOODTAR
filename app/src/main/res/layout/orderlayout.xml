@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingVertical="5dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shoprounded"
+        android:id="@+id/orderBack"/>
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/orderBack"
+        app:layout_constraintBottom_toBottomOf="@id/orderBack"
+        android:id="@+id/orderImage"
+        android:src="@color/white"
+        android:scaleType="centerCrop"
+        android:layout_marginLeft="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        tools:text="Italino"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="@id/orderImage"
+        app:layout_constraintLeft_toRightOf="@id/orderImage"
+        android:layout_marginLeft="7dp"
+        android:id="@+id/shopoforder"
+        android:textStyle="bold"
+        android:maxWidth="180dp"/>
+
+    <TextView
+        app:layout_constraintWidth_percent="0.5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/shopoforder"
+        app:layout_constraintLeft_toLeftOf="@id/shopoforder"
+        android:id="@+id/orderprice"
+        android:textColor="@color/white"
+        android:maxWidth="180dp"
+        android:layout_marginTop="5dp"
+        android:text="1000"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateofOrder"
+        app:layout_constraintBottom_toBottomOf="@id/orderBack"
+        app:layout_constraintLeft_toLeftOf="@id/orderprice"
+        android:text="25/05/2001"
+        android:textColor="@color/white"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/orderBack"
+        app:layout_constraintBottom_toBottomOf="@id/orderBack"
+        android:text="Pending"
+        android:id="@+id/orderStatus"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
