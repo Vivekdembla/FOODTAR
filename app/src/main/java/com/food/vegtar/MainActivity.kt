@@ -3,6 +3,7 @@ package com.food.vegtar
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
@@ -14,12 +15,17 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.food.vegtar.Dao.ShopDao
 import com.food.vegtar.models.Shop
 import com.google.firebase.firestore.Query
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity : AppCompatActivity(), IShopAdapter {
-    private lateinit var home :ImageView
-    private lateinit var cart:ImageView
-    private lateinit var profile:ImageView
+    private lateinit var home: ImageView
+    private lateinit var cart: ImageView
+    private lateinit var profile: ImageView
     private lateinit var adapter: shopAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var shopDao: ShopDao
@@ -31,14 +37,39 @@ class MainActivity : AppCompatActivity(), IShopAdapter {
         recyclerView = findViewById(R.id.recyclerView)
         shopDao = ShopDao()
         home = findViewById(R.id.home)
-        cart  =findViewById(R.id.cartView)
+        cart = findViewById(R.id.cartView)
         profile = findViewById(R.id.profile)
         setUpRecyclerView()
         profile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
+        getMyData()
+
     }
+
+    private fun getMyData() {
+        val retrofitBuilder = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("http://api.timezonedb.com/")
+            .build()
+            .create(ApiInterface::class.java)
+        val retrofitData = retrofitBuilder.getData()
+        retrofitData.enqueue(object : Callback<MyData?> {
+            override fun onResponse(call: Call<MyData?>, response: Response<MyData?>) {
+                val responseBody = response.body()!!
+                val myStringBuilder = StringBuilder()
+                myStringBuilder.append(responseBody.formatted)
+                myStringBuilder.append("\n")
+                Log.e("Checking", myStringBuilder.toString())
+            }
+
+            override fun onFailure(call: Call<com.food.vegtar.MyData?>, t: Throwable) {
+
+            }
+        })
+    }
+
     private fun setUpRecyclerView(){
         val shopCollection=shopDao.shopCollection
         val query = shopCollection.orderBy("NameOfShop", Query.Direction.ASCENDING)

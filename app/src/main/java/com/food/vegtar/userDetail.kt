@@ -37,6 +37,7 @@ class userDetail : AppCompatActivity() {
     lateinit var houseno :EditText
     lateinit var landmark :EditText
     lateinit var fromcart:String
+    lateinit var ShopImage:String
     var Pricelist :ArrayList<String>?= ArrayList()
     var Quantitylist :ArrayList<String>?= ArrayList()
 
@@ -60,6 +61,7 @@ class userDetail : AppCompatActivity() {
         Foodlist = intent.getStringArrayListExtra("Foodlist")
         Pricelist = intent.getStringArrayListExtra("Pricelist")
         Quantitylist = intent.getStringArrayListExtra("Quantitylist")
+        ShopImage = intent.getStringExtra("ShopImage").toString()
 
         Log.e("Checking","${Foodlist?.get(0)}")
         val userDao = userDao()
@@ -118,7 +120,9 @@ class userDetail : AppCompatActivity() {
                     val userDetail=auth.currentUser
                     val messageDao = MessageDao()
                     val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-                    val message = Message("${userDetail.uid}$timeStamp","Garlic Bread","Amandeep","Dairy Mohalla","$timeStamp","ordered","shopid.toString()")
+                    val message = Message("${userDetail.uid}$timeStamp","Garlic Bread",
+                        "Amandeep","Dairy Mohalla","$timeStamp",
+                        "ordered","shopid.toString()",ShopImage)
                     messageDao.addMessage(message)
                     messageDao.addMessageInUser(userDetail.uid,message)
                     Log.e("Checking",timeStamp)

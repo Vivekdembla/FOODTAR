@@ -2,6 +2,7 @@ package com.food.vegtar
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Adapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,11 +27,12 @@ class orderList : AppCompatActivity(), IOrderAdapter {
     fun setRecyclerView(){
         val auth = Firebase.auth
         val uid = auth.currentUser.uid
+        Log.e("Checking","Uid is $uid")
         val messageDao = MessageDao()
-        var Collection=messageDao.userCollection2
+        val Collection=messageDao.userCollection2
 //        var messageCollection = Collection.document(uid).collection("Message")
-        var messageCollection = Collection.document("dtcsGsdUTZSk97GMPi8ukmSA2Rk1").collection("Message")
-        val query = messageCollection.orderBy("TimeOfMessage", Query.Direction.ASCENDING)
+        val messageCollection = Collection.document(uid).collection("Message")
+        val query = messageCollection.orderBy("key", Query.Direction.ASCENDING)
         val recyclerViewOption = FirestoreRecyclerOptions.Builder<Message>().setQuery(
                 query,
                 Message::class.java
@@ -39,4 +41,15 @@ class orderList : AppCompatActivity(), IOrderAdapter {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
+
+    override fun onStart() {
+        super.onStart()
+        adapter.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter.stopListening()
+    }
+
 }

@@ -63,6 +63,7 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
         val price =  intent.getStringExtra("Price")
         val description = intent.getStringExtra("Description")
         val shopName = intent.getStringExtra("Shopname")
+        val ShopImage = intent.getStringExtra("ShopImage")
 
         viewModel.allCart.observe(this, androidx.lifecycle.Observer { list ->
             list?.let {
@@ -87,6 +88,7 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
             intent.putStringArrayListExtra("Foodlist",nameList)
             intent.putStringArrayListExtra("Pricelist",priceList)
             intent.putIntegerArrayListExtra("Quantitylist",quantityList)
+            intent.putExtra("ShopImage",ShopImage)
             startActivity(intent)
         }
 

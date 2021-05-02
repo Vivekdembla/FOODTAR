@@ -127,6 +127,7 @@ class ShopDetail : AppCompatActivity(), IFoodAdapter {
             intent.putExtra("Price",foodListArray[position].EachFoodPrice)
             intent.putExtra("Description", foodListArray[position].EachFoodDes)
             intent.putExtra("Shopname",shop.NameOfShop)
+            intent.putExtra("ShopImage",shop.shopImage)
             startActivity(intent)
 
         }
