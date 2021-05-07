@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.food.vegtar.models.OrderDetail
 
-class CartAdapter(val listener: ICartAdapter):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CartAdapter(val listener: ICartAdapter,val delivery:Int):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var cartItem = ArrayList<OrderDetail>()
     lateinit var view:View
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -26,13 +27,13 @@ class CartAdapter(val listener: ICartAdapter):RecyclerView.Adapter<RecyclerView.
             var num: Int = Integer.valueOf(quantity.getText().toString())
             num++
             quantity.text = num.toString()
-            listener.onAddClick(viewHolder.adapterPosition, num)
+            listener.onAddClick(viewHolder.adapterPosition, num,view)
         }
         viewHolder.minus.setOnClickListener {
             var num: Int = Integer.valueOf(quantity.getText().toString())
             num--
             quantity.text = num.toString()
-            listener.onMinusClick(viewHolder.adapterPosition, num)
+            listener.onMinusClick(viewHolder.adapterPosition, num,view)
         }
         return viewHolder
     }
@@ -66,10 +67,9 @@ class CartAdapter(val listener: ICartAdapter):RecyclerView.Adapter<RecyclerView.
                 a += Integer.valueOf(cartItem[i].EachFoodPrice)*cartItem[i].quantity!!
             }
 
-
             holder2.bill.text="₹${a.toString()}"
-            holder2.total.text = "Paisa he paisa hoga"
-            holder2.deliveryCharges.text = "50 Rupyiyaa dega"
+            holder2.total.text = "₹${a+delivery}"
+            holder2.deliveryCharges.text = "₹$delivery"
         }
     }
 
@@ -87,7 +87,7 @@ class CartAdapter(val listener: ICartAdapter):RecyclerView.Adapter<RecyclerView.
 class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val resname = itemView.findViewById<TextView>(R.id.resname)
     val ordername = itemView.findViewById<TextView>(R.id.ordername)
-    val price = itemView.findViewById<TextView>(R.id.price)
+    val price = itemView.findViewById<TextView>(R.id.price1)
     val itemImage = itemView.findViewById<ImageView>(R.id.itemImage)
     val add = itemView.findViewById<Button>(R.id.add)
     val minus = itemView.findViewById<Button>(R.id.subtract)
@@ -100,6 +100,6 @@ class BillViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 interface ICartAdapter{
-    fun onAddClick(position: Int, value: Int){}
-    fun onMinusClick(position: Int, value: Int){}
+    fun onAddClick(position: Int, value: Int, view: View){}
+    fun onMinusClick(position: Int, value: Int,view: View){}
 }

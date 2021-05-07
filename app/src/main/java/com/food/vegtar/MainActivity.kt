@@ -15,6 +15,10 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.food.vegtar.Dao.ShopDao
 import com.food.vegtar.models.Shop
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,47 +43,24 @@ class MainActivity : AppCompatActivity(), IShopAdapter {
         home = findViewById(R.id.home)
         cart = findViewById(R.id.cartView)
         profile = findViewById(R.id.profile)
-        setUpRecyclerView()
         profile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
-        getMyData()
+        setUpRecyclerView()
 
-    }
-
-    private fun getMyData() {
-        val retrofitBuilder = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("http://api.timezonedb.com/")
-            .build()
-            .create(ApiInterface::class.java)
-        val retrofitData = retrofitBuilder.getData()
-        retrofitData.enqueue(object : Callback<MyData?> {
-            override fun onResponse(call: Call<MyData?>, response: Response<MyData?>) {
-                val responseBody = response.body()!!
-                val myStringBuilder = StringBuilder()
-                myStringBuilder.append(responseBody.formatted)
-                myStringBuilder.append("\n")
-                Log.e("Checking", myStringBuilder.toString())
-            }
-
-            override fun onFailure(call: Call<com.food.vegtar.MyData?>, t: Throwable) {
-
-            }
-        })
     }
 
     private fun setUpRecyclerView(){
-        val shopCollection=shopDao.shopCollection
-        val query = shopCollection.orderBy("NameOfShop", Query.Direction.ASCENDING)
-        val recyclerViewOption = FirestoreRecyclerOptions.Builder<Shop>().setQuery(
-            query,
-            Shop::class.java
-        ).build()
-        adapter = shopAdapter(recyclerViewOption, this)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+            val shopCollection = shopDao.shopCollection
+            val query = shopCollection.orderBy("NameOfShop", Query.Direction.ASCENDING)
+            val recyclerViewOption = FirestoreRecyclerOptions.Builder<Shop>().setQuery(
+                query,
+                Shop::class.java
+            ).build()
+            adapter = shopAdapter(recyclerViewOption, this)
+                recyclerView.adapter = adapter
+                recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onStart() {

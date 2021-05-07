@@ -3,14 +3,13 @@ package com.food.vegtar
 import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +30,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,12 +50,13 @@ class ShopDetail : AppCompatActivity(), IFoodAdapter {
     private lateinit var view: View
     lateinit var viewHolder: PopUpViewHolder
     lateinit var shop:Shop
+    var shopid:String?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_detail)
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
-        val shopid = intent.getStringExtra("shopid")
+        shopid = intent.getStringExtra("shopid")
         val shopDao = ShopDao()
         foodListArray = ArrayList()
         recyclerView = findViewById(R.id.recyclerView2)
@@ -93,6 +98,43 @@ class ShopDetail : AppCompatActivity(), IFoodAdapter {
 
     }
 
+
+    private fun getMyData():Double {
+        var p:Double=0.0
+        val retrofitBuilder = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("https://api.timezonedb.com/")
+            .build()
+            .create(ApiInterface::class.java)
+        val retrofitData = retrofitBuilder.getData()
+        retrofitData.enqueue(object : Callback<MyData?> {
+            override fun onResponse(call: Call<MyData?>, response: Response<MyData?>) {
+                val responseBody = response.body()!!
+                val myStringBuilder = StringBuilder()
+                myStringBuilder.append(responseBody.formatted)
+                myStringBuilder.append("\n")
+                Log.e("Checking", myStringBuilder.toString())
+                val x = "${myStringBuilder.toString()[11]}${myStringBuilder.toString()[12]}" +
+                        ".${myStringBuilder.toString()[14]}"+"${myStringBuilder.toString()[15]}"
+                p =  x.toDouble()
+                Log.e("Checking", "$p")
+                if(p>shop.OpeningTime!!&&p<shop.ClosingTime!!) {
+                    view.findViewById<Button>(R.id.cartButton).visibility = View.VISIBLE
+
+                }
+                else{
+                    view.findViewById<TextView>(R.id.closed).visibility = View.VISIBLE
+                }
+                view.findViewById<ProgressBar>(R.id.progressBar2).visibility = View.GONE
+            }
+
+            override fun onFailure(call: Call<MyData?>, t: Throwable) {
+                Toast.makeText(this@ShopDetail,"Try Again. Error -> $t",Toast.LENGTH_SHORT).show()
+            }
+        })
+        return p
+    }
+
     class PopUpViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val one = itemView.findViewById<TextView>(R.id.one)
         val cartButton = itemView.findViewById<Button>(R.id.cartButton)
@@ -111,35 +153,32 @@ class ShopDetail : AppCompatActivity(), IFoodAdapter {
         viewHolder.price.text = foodListArray[position].EachFoodPrice.toString()
         viewHolder.description.text = foodListArray[position].EachFoodDes.toString()
         dialog.setContentView(view)
+        getMyData()
         dialog.show()
 
 
         viewHolder.cartButton.setOnClickListener{
-//            val userDetail=auth.currentUser
-//            val messageDao = MessageDao()
-//            val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-//            val message = Message("${userDetail.uid}$timeStamp","Garlic Bread","Amandeep","Dairy Mohalla","$timeStamp","ordered",shopid.toString())
-//            messageDao.addMessage(message)
-            Log.e("Checking","Cart Button Clicked")
-            val intent = Intent(this,CartActivity::class.java)
-            intent.putExtra("ImageUrl",foodListArray[position].EachFoodUrl)
-            intent.putExtra("Name",foodListArray[position].EachFoodName)
-            intent.putExtra("Price",foodListArray[position].EachFoodPrice)
-            intent.putExtra("Description", foodListArray[position].EachFoodDes)
-            intent.putExtra("Shopname",shop.NameOfShop)
-            intent.putExtra("ShopImage",shop.shopImage)
-            startActivity(intent)
-
+                Log.e("Checking", "Cart Button Clicked")
+                val intent = Intent(this, CartActivity::class.java)
+                intent.putExtra("ImageUrl", foodListArray[position].EachFoodUrl)
+                intent.putExtra("Name", foodListArray[position].EachFoodName)
+                intent.putExtra("Price", foodListArray[position].EachFoodPrice)
+                intent.putExtra("Description", foodListArray[position].EachFoodDes)
+                intent.putExtra("Shopname", shop.NameOfShop)
+                intent.putExtra("ShopImage", shop.shopImage)
+                val sharedPreferences: SharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
+                val editor: SharedPreferences.Editor = sharedPreferences.edit()
+                editor.putString("open",shop.OpeningTime.toString())
+                editor.putString("close",shop.ClosingTime.toString())
+                editor.putString("shopId",shopid)
+                editor.putString("ShopImage",shop.shopImage.toString())
+                editor.putString("name",shop.NameOfShop)
+                editor.putInt("Minimum",shop.Minimum!!)
+                editor.putInt("delivery",shop.Delivery!!)
+                editor.apply()
+                startActivity(intent)
         }
 
-
-
-
-//       intent.putExtra("FoodName", foodListArray[position].EachFoodName)
-//       intent.putExtra("FoodPrice", foodListArray[position].EachFoodPrice)
-//       intent.putExtra("FoodDes", foodListArray[position].EachFoodDes)
-//       intent.putExtra("FoodImage", foodListArray[position].EachFoodUrl)
-//        startActivity(intent)
     }
 
 }

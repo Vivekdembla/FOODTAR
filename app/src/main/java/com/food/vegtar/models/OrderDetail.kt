@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "cart_table")
 data class OrderDetail(
         @PrimaryKey var EachFoodName:String,
-//        @ColumnInfo var EachFoodName:String?,
         @ColumnInfo var EachFoodPrice:String?,
         @ColumnInfo var EachFoodUrl:String?,
         @ColumnInfo var EachFoodDes:String?,

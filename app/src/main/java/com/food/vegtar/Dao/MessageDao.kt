@@ -15,18 +15,18 @@ class MessageDao {
     private var userCollection = db.collection("Shop")
     var userCollection2 = db.collection("users")
 
-    fun addMessage(message: Message?){
+    fun addMessage(message: Message?,ownerId:String){
         message?.let {
             GlobalScope.launch(Dispatchers.IO) {
 //                userCollection.document(message.key).set(it)
 //                userCollection.document("Xr5uHwRLoalMzJAR3HyK").collection("Message").document(id).set(message)
-                userCollection.document("Xr5uHwRLoalMzJAR3HyK").collection("Message").add(message)
+                userCollection.document(ownerId).collection("Message").add(message)
             }
         }
     }
 
-    fun getUserById(uId: String): Task<DocumentSnapshot> {
-        return userCollection.document(uId).get()
+    fun getUserById(uId: String,ownerId: String): Task<DocumentSnapshot> {
+        return userCollection2.document(ownerId).collection("Message").document(uId).get()
     }
 
     fun addMessageInUser(uId: String,message: Message?){

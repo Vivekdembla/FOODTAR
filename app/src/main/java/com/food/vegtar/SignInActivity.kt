@@ -2,12 +2,15 @@ package com.food.vegtar
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ProgressBar
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import com.food.vegtar.models.User
 import com.food.vegtar.Dao.userDao
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -41,6 +44,8 @@ class SignInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         setContentView(R.layout.activity_sign_in)
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))

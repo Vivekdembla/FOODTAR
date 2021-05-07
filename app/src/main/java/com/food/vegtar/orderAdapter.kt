@@ -16,6 +16,9 @@ class orderAdapter(options: FirestoreRecyclerOptions<Message>, val listener: IOr
     class orderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val shopoforder = itemView.findViewById<TextView>(R.id.shopoforder)
         val orderImage = itemView.findViewById<ImageView>(R.id.orderImage2)
+        val money = itemView.findViewById<TextView>(R.id.orderprice)
+        val time = itemView.findViewById<TextView>(R.id.dateofOrder)
+        val orderStatus = itemView.findViewById<TextView>(R.id.orderStatus)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): orderViewHolder {
@@ -30,6 +33,9 @@ class orderAdapter(options: FirestoreRecyclerOptions<Message>, val listener: IOr
     override fun onBindViewHolder(holder: orderViewHolder, position: Int, model: Message) {
         Glide.with(holder.orderImage.context ).load(model.image).into(holder.orderImage)
         holder.shopoforder.text = model.shopname
+        holder.money.text = "₹${model.amount}"
+        holder.time.text = model.timeOfMessage
+        holder.orderStatus.text = model.status
     }
 }
 

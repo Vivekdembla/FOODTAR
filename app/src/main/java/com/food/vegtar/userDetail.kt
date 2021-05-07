@@ -1,32 +1,40 @@
 package com.food.vegtar
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.food.vegtar.Dao.MessageDao
 import com.food.vegtar.Dao.userDao
 import com.food.vegtar.models.Message
 import com.food.vegtar.models.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class userDetail : AppCompatActivity() {
+    var SHARED_PRE="sharedpreference"
     lateinit var auth:FirebaseAuth
     lateinit var uid: String
     lateinit var currentUser: User
@@ -36,10 +44,14 @@ class userDetail : AppCompatActivity() {
     lateinit var phone:EditText
     lateinit var houseno :EditText
     lateinit var landmark :EditText
-    lateinit var fromcart:String
+    var fromcart:String?=null
     lateinit var ShopImage:String
+    lateinit var DateTime:String
+    var shopId:String?=null
+    var Delivery:Int?=null
     var Pricelist :ArrayList<String>?= ArrayList()
-    var Quantitylist :ArrayList<String>?= ArrayList()
+    var Quantitylist :ArrayList<Int>?= ArrayList()
+    lateinit var progress_bar:ProgressBar
 
     var Foodlist:ArrayList<String>?= ArrayList()
 //    var SHARED_PRE="sharedpreference"
@@ -56,14 +68,20 @@ class userDetail : AppCompatActivity() {
         phone = findViewById(R.id.PhoneEditText)
         houseno = findViewById(R.id.HouseNoEditText)
         landmark = findViewById(R.id.landmarkEditText)
-
+        progress_bar = findViewById(R.id.progress_bar)
+        var sharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
+        progress_bar.visibility=View.GONE
         fromcart = intent.getStringExtra("fromcart").toString()
         Foodlist = intent.getStringArrayListExtra("Foodlist")
         Pricelist = intent.getStringArrayListExtra("Pricelist")
-        Quantitylist = intent.getStringArrayListExtra("Quantitylist")
-        ShopImage = intent.getStringExtra("ShopImage").toString()
+        Quantitylist = intent.getIntegerArrayListExtra("Quantitylist")
+        ShopImage = sharedPreferences.getString("ShopImage", " ")!!
+        DateTime = intent.getStringExtra("DateTime").toString()
+        Delivery = intent.getIntExtra("delivery", 0)
+    Log.e("Checking", "DateTime -> $DateTime")
+        val ShopName = sharedPreferences.getString("name", "Name")
 
-        Log.e("Checking","${Foodlist?.get(0)}")
+        Log.e("Checking", "${Foodlist?.get(0)}")
         val userDao = userDao()
         GlobalScope.launch(Dispatchers.IO) {
             currentUser = userDao.getUserById(uid).await().toObject(User::class.java)!!
@@ -75,7 +93,8 @@ class userDetail : AppCompatActivity() {
             }
         }
 
-    if(fromcart!=null){
+
+    if(intent.getStringExtra("fromcart").toString()=="fromcart"){
         submit.setText("Confirm Order")
     }
     else{
@@ -84,7 +103,7 @@ class userDetail : AppCompatActivity() {
 
 
         submit.setOnClickListener {
-            if(fromcart==null) {
+            if(fromcart!="fromcart") {
                 val user = User(
                     uid,
                     name.text.toString(),
@@ -94,10 +113,7 @@ class userDetail : AppCompatActivity() {
                     landmark.text.toString()
                 )
                 userDao.addUser(user)
-//            savedata("name",name.text.toString())
-//            savedata("phone",phone.text.toString())
-//            savedata("houseno",houseno.text.toString())
-//            savedata("landmark",landmark.text.toString())
+                Toast.makeText(this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show()
                 finish()
             }
             else{
@@ -116,28 +132,112 @@ class userDetail : AppCompatActivity() {
                     }
                 }
                 else {
+                    progress_bar.visibility = View.VISIBLE
+                    var Price =0
+                    var Order:String?=""
+                    for(i in 0 until Foodlist!!.size){
+                        Price+=Integer.valueOf(Quantitylist!![i])*Integer.valueOf(Pricelist!![i])
+                        Order+="${Foodlist!![i]}*${Quantitylist!![i]}=${Integer.valueOf(Quantitylist!![i])*Integer.valueOf(
+                            Pricelist!![i]
+                        )},\n"
+                    }
+                    Log.e("Checking", "Amount -> $Price \n$Order")
+                    shopId = sharedPreferences.getString("shopId", " ")
+                    Delivery = sharedPreferences.getInt("delivery", 0)
                     val intent = Intent(this, orderedActivity::class.java)
                     val userDetail=auth.currentUser
                     val messageDao = MessageDao()
                     val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-                    val message = Message("${userDetail.uid}$timeStamp","Garlic Bread",
-                        "Amandeep","Dairy Mohalla","$timeStamp",
-                        "ordered","shopid.toString()",ShopImage)
-                    messageDao.addMessage(message)
-                    messageDao.addMessageInUser(userDetail.uid,message)
-                    Log.e("Checking",timeStamp)
-                    startActivity(intent)
+                    val message = Message(
+                        "${userDetail.uid}$timeStamp", Order,
+                        name.text.toString(), "${houseno.text}\n${landmark.text}", DateTime,
+                        "Ordered", ShopImage, Price, ShopName.toString(), Delivery!!
+                    )
+//                    var Message = "Order Sent"
+//                    var builder = NotificationCompat.Builder(
+//                        this@userDetail,"My Notification"
+//                    ).setSmallIcon(R.drawable.cart).setContentTitle("New Notification")
+//                        .setContentTitle(Message).setAutoCancel(true)
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                    intent.putExtra("message",Message)
+//                    var pendingIntent = PendingIntent.getActivity(this,0,intent,
+//                    PendingIntent.FLAG_UPDATE_CURRENT)
+//                    builder.setContentIntent(pendingIntent)
+//                    var notificationManager:NotificationManager= getSystemService(
+//                        Context.NOTIFICATION_SERVICE
+//                    ) as NotificationManager
+//                    notificationManager.notify(0,builder.build())
+                    GlobalScope.launch(Dispatchers.IO) {
+                        if (isConnected()) {
+                            messageDao.addMessage(message, shopId!!)
+                            messageDao.addMessageInUser(userDetail.uid, message)
+                            Log.e("Checking", timeStamp)
+                            intent.putExtra("ShopName", message.Name)
+                            intent.putExtra("Amount", message.amount)
+                            intent.putExtra("Delivery", message.deliveryCharges)
+                            intent.putExtra("Status", message.status)
+                            intent.putExtra("Address", message.address)
+                            intent.putExtra("Message", message.message)
+
+                            startActivity(intent)
+                            finish()
+                        }
+
+                        else {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    getApplicationContext(),
+                                    "Check Your Internet Connection",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                progress_bar.visibility=View.GONE
+                            }
+                        }
+                    }
                 }
             }
         }
         cancel.setOnClickListener {
-            finish()
+            val intent = Intent(applicationContext, orderList::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, 0)
+
+            val builder = NotificationCompat.Builder(applicationContext, "CHANNEL_ID")
+                .setSmallIcon(R.drawable.cart)
+                .setContentTitle("My notification")
+                .setContentText("Hello World!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+            
+            val notificationManager:NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.notify(0,builder.build())
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val name = "getString(0)"
+                val descriptionText = "hbdkje"
+                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                val channel = NotificationChannel( "CHANNEL_ID",name, importance).apply {
+                    description = descriptionText
+                }
+                // Register the channel with the system
+                val notificationManager: NotificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.createNotificationChannel(channel)
+            }
+
+
+
+//            finish()
         }
     }
-//    fun savedata(key:String, x:String){
-//        val sharedPreferences: SharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
-//        val editor: SharedPreferences.Editor = sharedPreferences.edit()
-//        editor.putString(key, x)
-//        editor.apply()
-//    }
+
+    @Throws(InterruptedException::class, IOException::class)
+    fun isConnected(): Boolean {
+        val command = "ping -c 1 google.com"
+        return Runtime.getRuntime().exec(command).waitFor() == 0
+    }
+
 }

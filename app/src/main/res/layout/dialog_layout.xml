@@ -73,6 +73,29 @@
         android:background="@drawable/allroundedge"
         android:textSize="12sp"
         app:backgroundTint="@color/black"
+        android:visibility="gone"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/closed"
+        android:text="Order Closed !"
+        android:textStyle="bold"
+        android:textColor="@color/red"
+        android:textSize="19dp"
+        android:padding="12dp"
+        app:layout_constraintRight_toRightOf="@id/orderImage"
+        app:layout_constraintTop_toBottomOf="@id/orderImage"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/progressBar2"
+        app:layout_constraintRight_toRightOf="@id/orderImage"
+        app:layout_constraintTop_toBottomOf="@id/orderImage"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="20dp"
         />
 
 

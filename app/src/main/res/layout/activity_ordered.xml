@@ -1,9 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".orderedActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="#E6000000"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/billDetails"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:text="Bill Details"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemName"
+        app:layout_constraintTop_toBottomOf="@id/billDetails"
+        app:layout_constraintLeft_toLeftOf="@id/billDetails"
+        android:text="Naam he naam"
+        android:textColor="@color/white"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/itemName"
+        android:text="₹00.00"
+        android:textColor="@color/white"
+        android:layout_marginRight="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/itemName"
+        android:id="@+id/bill1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Charges"
+        app:layout_constraintTop_toBottomOf="@id/itemName"
+        app:layout_constraintLeft_toLeftOf="@id/itemName"
+        android:text="Delivery Charges"
+        android:textColor="@color/white"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/deliveryCharges1"
+        app:layout_constraintTop_toTopOf="@id/Charges"
+        app:layout_constraintBottom_toBottomOf="@id/Charges"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/white"
+        android:text="₹00.00"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/totalCharges"
+        app:layout_constraintTop_toBottomOf="@id/Charges"
+        app:layout_constraintLeft_toLeftOf="@id/Charges"
+        android:text="Total"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/total1"
+        app:layout_constraintTop_toTopOf="@id/totalCharges"
+        app:layout_constraintBottom_toBottomOf="@id/totalCharges"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/white"
+        android:text="₹00.00"
+        android:layout_marginRight="10dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/addressOrder"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/totalCharges"
+        app:layout_constraintLeft_toLeftOf="@id/totalCharges"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            android:id="@+id/address"
+        app:layout_constraintTop_toTopOf="@id/addressOrder"
+        app:layout_constraintRight_toRightOf="@id/total1"
+        android:text="Rbhjjjjjjjiiiiiiiiiiiihhhhhiiii
+        iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+        iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+        iiiiiiiiiiiiiiiiiiiiiij"
+        android:gravity="right"
+        android:textColor="@color/white"
+        android:maxWidth="200dp"
+        android:editable="false"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/address"
+        app:layout_constraintRight_toRightOf="@id/total1"
+        android:text="Ddfskjgh"
+        android:textColor="@color/red"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:background="@drawable/allroundedge"
+        android:layout_marginTop="20dp"
+        android:id="@+id/Status"
+        android:padding="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
