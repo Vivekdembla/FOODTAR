@@ -21,4 +21,7 @@ interface OrderDao {
 
     @Update
     suspend fun update(orderDetail: OrderDetail)
+
+    @Query("SELECT EXISTS (SELECT 1 FROM cart_table WHERE EachFoodName = :name)")
+    fun exists(name: String): Boolean
 }

@@ -21,32 +21,38 @@
         app:layout_constraintTop_toTopOf="@id/background"
         app:layout_constraintBottom_toBottomOf="@id/background"
         android:src="@color/white"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="10dp"
         android:scaleType="centerCrop"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxWidth="250dp"
         app:layout_constraintLeft_toRightOf="@id/FoodImage"
         app:layout_constraintTop_toTopOf="@id/FoodImage"
-        tools:text="Mushroom"
+        tools:text="Mushroommmmmmmmmmmmmmdmmmmmmmmmmmmmddddmmmmmmmmmmmm"
+        android:layout_marginRight="5dp"
+        app:layout_constraintRight_toLeftOf="@id/price"
         android:textColor="@color/white"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
         android:id="@+id/FoodName"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:maxLines="1"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:maxWidth="250dp"
+        android:maxWidth="250sp"
         android:id="@+id/desc"
         app:layout_constraintLeft_toLeftOf="@id/FoodName"
         app:layout_constraintTop_toBottomOf="@id/FoodName"
+        app:layout_constraintRight_toLeftOf="@id/price"
         android:text="Medium"
-        android:textColor="#D7FFFFFF"/>
+        android:maxEms="15"
+        android:textColor="#D7FFFFFF"
+        android:layout_marginRight="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"

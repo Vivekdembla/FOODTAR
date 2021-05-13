@@ -1,7 +1,6 @@
 package com.food.vegtar.Dao
 
 import com.food.vegtar.models.Message
-import com.food.vegtar.models.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,10 +28,10 @@ class MessageDao {
         return userCollection2.document(ownerId).collection("Message").document(uId).get()
     }
 
-    fun addMessageInUser(uId: String,message: Message?){
+    fun addMessageInUser(uId: String,message: Message?,id:String){
         message?.let {
             GlobalScope.launch(Dispatchers.IO) {
-                userCollection2.document(uId).collection("Message").add(message)
+                userCollection2.document(uId).collection("Message").document(id).set(message)
             }
         }
     }

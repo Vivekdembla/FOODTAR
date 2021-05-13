@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.food.vegtar.models.Message
@@ -31,7 +32,9 @@ class orderAdapter(options: FirestoreRecyclerOptions<Message>, val listener: IOr
     }
 
     override fun onBindViewHolder(holder: orderViewHolder, position: Int, model: Message) {
-        Glide.with(holder.orderImage.context ).load(model.image).into(holder.orderImage)
+        Glide.with(holder.orderImage.context ).
+        load(model.image).apply(RequestOptions.circleCropTransform()).
+        into(holder.orderImage)
         holder.shopoforder.text = model.shopname
         holder.money.text = "₹${model.amount}"
         holder.time.text = model.timeOfMessage

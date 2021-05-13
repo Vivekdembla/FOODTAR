@@ -23,12 +23,13 @@
         android:textStyle="bold"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/itemName"
         app:layout_constraintTop_toBottomOf="@id/billDetails"
         app:layout_constraintLeft_toLeftOf="@id/billDetails"
-        android:text="Naam he naam"
+        app:layout_constraintRight_toLeftOf="@id/bill1"
+        android:text="Name"
         android:textColor="@color/white"
         android:layout_marginTop="8dp"/>
 
@@ -104,10 +105,7 @@
             android:id="@+id/address"
         app:layout_constraintTop_toTopOf="@id/addressOrder"
         app:layout_constraintRight_toRightOf="@id/total1"
-        android:text="Rbhjjjjjjjiiiiiiiiiiiihhhhhiiii
-        iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-        iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-        iiiiiiiiiiiiiiiiiiiiiij"
+        android:text="Address"
         android:gravity="right"
         android:textColor="@color/white"
         android:maxWidth="200dp"

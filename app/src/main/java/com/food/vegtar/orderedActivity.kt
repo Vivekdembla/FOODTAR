@@ -7,7 +7,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import javax.net.ssl.SSLEngineResult
 
 class orderedActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +21,7 @@ class orderedActivity : AppCompatActivity() {
 //        intent.putExtra("Status",message?.status)
 //        intent.putExtra("Address",message?.Address
 
-        val Amount = intent.getIntExtra("Amount",0)
+        val Amount = intent.getDoubleExtra("Amount",0.0)
         val Delivery = intent.getIntExtra("Delivery",0)
         val Status = intent.getStringExtra("Status")
         val Address = intent.getStringExtra("Address")

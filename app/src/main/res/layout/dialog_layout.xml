@@ -25,6 +25,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:id="@+id/orderImage"
+        android:src="#E6000000"
         />
 
     <TextView
@@ -73,8 +74,9 @@
         android:background="@drawable/allroundedge"
         android:textSize="12sp"
         app:backgroundTint="@color/black"
-        android:visibility="gone"
-        />
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:visibility="gone"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

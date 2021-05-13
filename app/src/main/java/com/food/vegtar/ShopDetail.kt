@@ -3,7 +3,6 @@ package com.food.vegtar
 import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
-import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,11 +14,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.food.vegtar.Dao.MessageDao
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.food.vegtar.Dao.ShopDao
-import com.food.vegtar.Dao.userDao
 import com.food.vegtar.models.FoodDetail
-import com.food.vegtar.models.Message
 import com.food.vegtar.models.Shop
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
@@ -35,11 +33,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 class ShopDetail : AppCompatActivity(), IFoodAdapter {
+    lateinit var progressBar:ProgressBar
     var SHARED_PRE="sharedpreference"
     var position:Int?=null
     lateinit var adapter: FoodAdapter
@@ -58,6 +56,8 @@ class ShopDetail : AppCompatActivity(), IFoodAdapter {
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         shopid = intent.getStringExtra("shopid")
         val shopDao = ShopDao()
+        progressBar = findViewById(R.id.pBar)
+        progressBar.visibility=View.VISIBLE
         foodListArray = ArrayList()
         recyclerView = findViewById(R.id.recyclerView2)
         auth = Firebase.auth
@@ -92,6 +92,7 @@ class ShopDetail : AppCompatActivity(), IFoodAdapter {
             }
             withContext(Dispatchers.Main) {
                 adapter.updateList(foodListArray)
+                progressBar.visibility = View.GONE
             }
 
         }
@@ -149,7 +150,10 @@ class ShopDetail : AppCompatActivity(), IFoodAdapter {
         view = layoutInflater.inflate(R.layout.dialog_layout, null)
         viewHolder = PopUpViewHolder(view)
         viewHolder.one.text = foodListArray[position].EachFoodName.toString()
-        Glide.with(viewHolder.orderImage.context ).load(foodListArray[position].EachFoodUrl).into(viewHolder.orderImage)
+        Glide.with(viewHolder.orderImage.context )
+            .load(foodListArray[position].EachFoodUrl)
+            .transform(CenterCrop(), RoundedCorners(25))
+            .into(viewHolder.orderImage)
         viewHolder.price.text = foodListArray[position].EachFoodPrice.toString()
         viewHolder.description.text = foodListArray[position].EachFoodDes.toString()
         dialog.setContentView(view)

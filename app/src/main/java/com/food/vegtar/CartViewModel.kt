@@ -3,7 +3,6 @@ package com.food.vegtar
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.food.vegtar.models.OrderDetail
 import kotlinx.coroutines.Dispatchers

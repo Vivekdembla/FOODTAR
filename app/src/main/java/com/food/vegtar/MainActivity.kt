@@ -3,9 +3,9 @@ package com.food.vegtar
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -15,16 +15,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.food.vegtar.Dao.ShopDao
 import com.food.vegtar.models.Shop
 import com.google.firebase.firestore.Query
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
 
 class MainActivity : AppCompatActivity(), IShopAdapter {
     private lateinit var home: ImageView
@@ -33,6 +23,7 @@ class MainActivity : AppCompatActivity(), IShopAdapter {
     private lateinit var adapter: shopAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var shopDao: ShopDao
+    lateinit var rView: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -43,15 +34,20 @@ class MainActivity : AppCompatActivity(), IShopAdapter {
         home = findViewById(R.id.home)
         cart = findViewById(R.id.cartView)
         profile = findViewById(R.id.profile)
+        rView = findViewById(R.id.rView)
         profile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
+        rView.visibility = View.VISIBLE
         setUpRecyclerView()
 
     }
 
+
+
     private fun setUpRecyclerView(){
+
             val shopCollection = shopDao.shopCollection
             val query = shopCollection.orderBy("NameOfShop", Query.Direction.ASCENDING)
             val recyclerViewOption = FirestoreRecyclerOptions.Builder<Shop>().setQuery(
@@ -61,6 +57,7 @@ class MainActivity : AppCompatActivity(), IShopAdapter {
             adapter = shopAdapter(recyclerViewOption, this)
                 recyclerView.adapter = adapter
                 recyclerView.layoutManager = LinearLayoutManager(this)
+        rView.visibility = View.GONE
     }
 
     override fun onStart() {

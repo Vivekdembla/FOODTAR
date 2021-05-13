@@ -2,7 +2,6 @@ package com.food.vegtar
 
 import androidx.lifecycle.LiveData
 import com.food.vegtar.Dao.OrderDao
-import com.food.vegtar.models.FoodDetail
 import com.food.vegtar.models.OrderDetail
 
 class CartRepository(private val orderDoa:OrderDao) {

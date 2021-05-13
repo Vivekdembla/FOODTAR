@@ -3,29 +3,40 @@
     package="com.food.vegtar">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@drawable/snacks"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.VEGTAR">
-        <activity android:name=".orderList"></activity>
-        <activity android:name=".orderedActivity" />
-        <activity android:name=".userDetail" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".CartActivity" />
-        <activity android:name=".ShopDetail" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SignInActivity">
+        android:theme="@style/Theme.VEGTAR"
+        android:windowSoftInputMode="adjustResize">
+        <activity android:name="com.food.vegtar.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.food.vegtar.orderList" />
+        <activity android:name="com.food.vegtar.orderedActivity" />
+        <activity android:name="com.food.vegtar.userDetail"/>
+        <activity android:name="com.food.vegtar.ProfileActivity" />
+        <activity android:name="com.food.vegtar.CartActivity" />
+        <activity android:name="com.food.vegtar.ShopDetail" />
+        <activity android:name="com.food.vegtar.MainActivity" />
+        <activity android:name="com.food.vegtar.SignInActivity"/>
+
+        <service
+            android:name="com.food.vegtar.FirebaseService"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

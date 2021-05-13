@@ -21,30 +21,33 @@
         android:id="@+id/itemImage"
         android:src="@color/white"
         android:scaleType="centerCrop"
-        android:layout_marginLeft="15dp"/>
+        android:layout_marginLeft="5dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
         tools:text="Italino"
         android:textSize="18dp"
         android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="@id/itemImage"
         app:layout_constraintLeft_toRightOf="@id/itemImage"
+        app:layout_constraintRight_toLeftOf="@id/subtract"
+        android:layout_marginRight="5dp"
         android:layout_marginLeft="7dp"
         android:id="@+id/resname"
-        android:textStyle="bold"
-        android:maxWidth="180dp"/>
+        android:textStyle="bold"/>
 
     <TextView
-        app:layout_constraintWidth_percent="0.5"
-        android:layout_width="wrap_content"
+
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/resname"
         app:layout_constraintLeft_toLeftOf="@id/resname"
         android:id="@+id/ordername"
         android:textColor="@color/white"
-        android:maxWidth="180dp"
+        app:layout_constraintRight_toLeftOf="@id/subtract"
+        android:layout_marginRight="5dp"
         />
 
     <Button
@@ -59,17 +62,19 @@
         android:background="@drawable/add"
         app:backgroundTint="@color/white"/>
 
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintRight_toLeftOf="@id/add"
         android:textSize="18dp"
         android:id="@+id/quantity"
         android:text="22"
+        android:inputType="number"
         app:layout_constraintTop_toTopOf="@id/add"
         android:layout_marginRight="5dp"
         app:layout_constraintBottom_toBottomOf="@id/add"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:imeOptions="actionDone"/>
 
     <Button
         android:layout_width="25dp"

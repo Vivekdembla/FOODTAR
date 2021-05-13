@@ -20,14 +20,16 @@ import androidx.core.content.ContextCompat
 import com.food.vegtar.Dao.MessageDao
 import com.food.vegtar.Dao.userDao
 import com.food.vegtar.models.Message
+import com.food.vegtar.models.TokenId
 import com.food.vegtar.models.User
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.gson.Gson
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -133,13 +135,21 @@ class userDetail : AppCompatActivity() {
                 }
                 else {
                     progress_bar.visibility = View.VISIBLE
-                    var Price =0
+                    val user = User(
+                        uid,
+                        name.text.toString(),
+                        auth.currentUser.photoUrl.toString(),
+                        phone.text.toString(),
+                        houseno.text.toString(),
+                        landmark.text.toString()
+                    )
+                    userDao.addUser(user)
+                    var Price =0.0
                     var Order:String?=""
                     for(i in 0 until Foodlist!!.size){
-                        Price+=Integer.valueOf(Quantitylist!![i])*Integer.valueOf(Pricelist!![i])
-                        Order+="${Foodlist!![i]}*${Quantitylist!![i]}=${Integer.valueOf(Quantitylist!![i])*Integer.valueOf(
-                            Pricelist!![i]
-                        )},\n"
+                        Price+=Quantitylist!![i]*(Pricelist!![i].toDouble())
+                        Order+="${Foodlist!![i]}*${Quantitylist!![i]}=${Integer.valueOf(Quantitylist!![i])*
+                            Pricelist!![i].toDouble()},\n"
                     }
                     Log.e("Checking", "Amount -> $Price \n$Order")
                     shopId = sharedPreferences.getString("shopId", " ")
@@ -151,46 +161,54 @@ class userDetail : AppCompatActivity() {
                     val message = Message(
                         "${userDetail.uid}$timeStamp", Order,
                         name.text.toString(), "${houseno.text}\n${landmark.text}", DateTime,
-                        "Ordered", ShopImage, Price, ShopName.toString(), Delivery!!
+                        "Ordered", ShopImage, Price, ShopName.toString(), Delivery!!,phone.text.toString()
                     )
-//                    var Message = "Order Sent"
-//                    var builder = NotificationCompat.Builder(
-//                        this@userDetail,"My Notification"
-//                    ).setSmallIcon(R.drawable.cart).setContentTitle("New Notification")
-//                        .setContentTitle(Message).setAutoCancel(true)
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//                    intent.putExtra("message",Message)
-//                    var pendingIntent = PendingIntent.getActivity(this,0,intent,
-//                    PendingIntent.FLAG_UPDATE_CURRENT)
-//                    builder.setContentIntent(pendingIntent)
-//                    var notificationManager:NotificationManager= getSystemService(
-//                        Context.NOTIFICATION_SERVICE
-//                    ) as NotificationManager
-//                    notificationManager.notify(0,builder.build())
-                    GlobalScope.launch(Dispatchers.IO) {
-                        if (isConnected()) {
-                            messageDao.addMessage(message, shopId!!)
-                            messageDao.addMessageInUser(userDetail.uid, message)
-                            Log.e("Checking", timeStamp)
-                            intent.putExtra("ShopName", message.Name)
-                            intent.putExtra("Amount", message.amount)
-                            intent.putExtra("Delivery", message.deliveryCharges)
-                            intent.putExtra("Status", message.status)
-                            intent.putExtra("Address", message.address)
-                            intent.putExtra("Message", message.message)
+                    FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                        message.userTokenId = it.token
+                        GlobalScope.launch(Dispatchers.IO) {
+                            if (isConnected()) {
+                                notification()
+                                messageDao.addMessage(message, shopId!!)
+                                messageDao.addMessageInUser(userDetail.uid, message,message.key!!)
+                                Log.e("Checking", timeStamp)
+                                intent.putExtra("ShopName", message.name)
+                                intent.putExtra("Amount", message.amount)
+                                intent.putExtra("Delivery", message.deliveryCharges)
+                                intent.putExtra("Status", message.status)
+                                intent.putExtra("Address", message.address)
+                                intent.putExtra("Message", message.message)
 
-                            startActivity(intent)
-                            finish()
-                        }
 
-                        else {
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(
-                                    getApplicationContext(),
-                                    "Check Your Internet Connection",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                progress_bar.visibility=View.GONE
+                                val db = FirebaseFirestore.getInstance()
+                                val token =
+                                    db.collection("TokenId").document(shopId.toString()).get()
+                                        .await().toObject(TokenId::class.java)
+//                            val title = "New Order from ${message.Name}"
+//                            val message = "You received an order of rupees ${message.amount+message.deliveryCharges}"
+                                val title = "New Order from ${message.name}"
+                                val Message =
+                                    "You received an order of rupees ${(message.amount) + (message.deliveryCharges)}"
+                                val recipientToken = token!!.TokenId
+                                if (title.isNotEmpty() && Message.isNotEmpty() && recipientToken.isNotEmpty()) {
+                                    PushNotification(
+                                        NotificationData(title, Message),
+                                        recipientToken
+                                    ).also {
+                                        sendNotification(it)
+                                        startActivity(intent)
+                                        finish()
+                                    }
+                                }
+
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        getApplicationContext(),
+                                        "Check Your Internet Connection",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    progress_bar.visibility = View.GONE
+                                }
                             }
                         }
                     }
@@ -198,20 +216,24 @@ class userDetail : AppCompatActivity() {
             }
         }
         cancel.setOnClickListener {
-            val intent = Intent(applicationContext, orderList::class.java).apply {
+            finish()
+        }
+    }
+
+    fun notification(){
+        val intent = Intent(applicationContext, orderList::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
             val pendingIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, 0)
 
             val builder = NotificationCompat.Builder(applicationContext, "CHANNEL_ID")
-                .setSmallIcon(R.drawable.cart)
-                .setContentTitle("My notification")
-                .setContentText("Hello World!")
+                .setSmallIcon(R.drawable.snacks)
+                .setContentTitle("Ordered Sucessfully")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 // Set the intent that will fire when the user taps the notification
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
-            
+
             val notificationManager:NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(0,builder.build())
 
@@ -227,12 +249,8 @@ class userDetail : AppCompatActivity() {
                     getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.createNotificationChannel(channel)
             }
-
-
-
-//            finish()
-        }
     }
+
 
     @Throws(InterruptedException::class, IOException::class)
     fun isConnected(): Boolean {
@@ -240,4 +258,17 @@ class userDetail : AppCompatActivity() {
         return Runtime.getRuntime().exec(command).waitFor() == 0
     }
 
+
+    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+            if(response.isSuccessful) {
+                Log.d("TAG", "Response: ${Gson().toJson(response)}")
+            } else {
+                Log.e("TAG", response.errorBody().toString())
+            }
+        } catch(e: Exception) {
+            Log.e("TAG", e.toString())
+        }
+    }
 }

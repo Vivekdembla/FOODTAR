@@ -1,12 +1,14 @@
 package com.food.vegtar.models
 
-data class Message(val key:String?="",
-                   val message:String?="",
-                   val Name:String?="",
-                   val address:String?="",
-                   val timeOfMessage:String?="",
-                   val status:String?="",
-                   val image:String="",
-                   val amount:Int=200,
-                   val shopname:String="",
-                   val deliveryCharges:Int=0)
+data class Message(var key:String?="",
+                   var message:String?="",
+                   var name:String?="",
+                   var address:String?="",
+                   var timeOfMessage:String?="",
+                   var status:String?="",
+                   var image:String="",
+                   var amount:Double=200.0,
+                   var shopname:String="",
+                   var deliveryCharges:Int=0,
+                   var phone:String="",
+                   var userTokenId:String="")

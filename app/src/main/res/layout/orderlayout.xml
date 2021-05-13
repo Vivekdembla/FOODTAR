@@ -21,23 +21,23 @@
         android:id="@+id/orderImage2"
         android:src="@color/white"
         android:scaleType="centerCrop"
-        android:layout_marginLeft="15dp"/>
+        android:layout_marginLeft="8dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="24dp"
         tools:text="Italino"
         android:textSize="20dp"
         android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="@id/orderImage2"
         app:layout_constraintLeft_toRightOf="@id/orderImage2"
+        app:layout_constraintRight_toLeftOf="@id/orderStatus"
+        android:layout_marginRight="5dp"
         android:layout_marginLeft="7dp"
         android:id="@+id/shopoforder"
-        android:textStyle="bold"
-        android:maxWidth="180dp"/>
+        android:textStyle="bold"/>
 
     <TextView
-        app:layout_constraintWidth_percent="0.5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/shopoforder"

@@ -4,40 +4,32 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
-import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import android.widget.Toast.makeText
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
-import com.food.vegtar.Dao.OrderDao
 import com.food.vegtar.models.OrderDetail
-import com.food.vegtar.models.Shop
+import kotlinx.android.synthetic.main.cartlist.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.reflect.Array.getInt
 
 
 class CartActivity : AppCompatActivity(), ICartAdapter {
     var SHARED_PRE="sharedpreference"
-    var count: Int = 1
     lateinit var emptyMessage:TextView
     lateinit var firstshop:String
     lateinit var totalPrice:TextView
@@ -52,29 +44,26 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
     lateinit var datetime:String
     lateinit var minimumOrder:TextView
     lateinit var nothing:ImageView
-    var a=0
+    var a=0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         setContentView(R.layout.activity_cart)
+        cartRecyclerView = findViewById(R.id.cartRecyclerView)
         val sharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
+        var delivery = sharedPreferences.getInt("delivery",0)
+        adapter = CartAdapter(this,delivery)
+        cartRecyclerView.adapter = adapter
+        cartRecyclerView.layoutManager = LinearLayoutManager(this)
         nothing = findViewById(R.id.nothing)
-        var minimum = sharedPreferences.getInt("Minimum", 0)
         orderNow = findViewById(R.id.orderNow)
-        cartRecyclerView = findViewById<RecyclerView>(R.id.cartRecyclerView)
         progressBar = findViewById(R.id.progressBar3)
         emptyMessage = findViewById(R.id.emptyMessage)
         ShopClosed = findViewById(R.id.timeOver)
         minimumOrder = findViewById(R.id.minimumOrder)
-        loadData()
-        Log.e("Checking","Count is $count")
-        Log.e("Checking","Shop name is ${firstshop} and count= ${count}")
-        var delivery = sharedPreferences.getInt("delivery",0)
-        adapter = CartAdapter(this,delivery)
-        cartRecyclerView.adapter = adapter
         totalPrice = findViewById(R.id.totalPrice)
-        cartRecyclerView.layoutManager = LinearLayoutManager(this)
+        loadData()
         viewModel=ViewModelProvider(
             this, ViewModelProvider.AndroidViewModelFactory.getInstance(
                 application
@@ -90,13 +79,10 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
         viewModel.allCart.observe(this, androidx.lifecycle.Observer { list ->
             list?.let {
                 adapter.updateList(it)
-                updatePrice()
                 cartItem = list
+                refreshView()
             }
         })
-        if(count!=1){
-            progressBar.visibility=View.VISIBLE}
-        getMyData()
 
 
         orderNow.setOnClickListener {
@@ -119,8 +105,7 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
         }
 
         if(shopName!=null){
-            if(count!= 1 && shopName!=firstshop){
-
+            if(shopName!=firstshop){
                 val view = layoutInflater.inflate(R.layout.deletedialog, null)
                 val builder = AlertDialog.Builder(this)
                 builder.setView(view)
@@ -131,41 +116,66 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
                     dialog.dismiss()
                 }
                 view.findViewById<Button>(R.id.confirm)?.setOnClickListener {
-                    viewModel.deleteAll()
                     dialog.dismiss()
+                    cartRecyclerView.visibility=View.VISIBLE
+                    totalPrice.visibility = View.VISIBLE
+                    emptyMessage.visibility = View.GONE
+                    viewModel.deleteAll()
                     val x = OrderDetail(name!!, price, imageUrl, description, shopName)
                     viewModel.insertCart(x)
-                    count = 2
-                    savecount(count)
                     savedata(shopName)
                     loadData()
+                    updatePrice()
                 }
             }
-            else if(count!=1 && shopName==firstshop){
+            else{
                 val x = OrderDetail(name!!, price, imageUrl, description, shopName)
-                Log.e("Checking","count!=0 && shopName==firstshop se add hua h : $shopName")
-                count=count+1
-                savecount(count)
                 viewModel.insertCart(x)
-            }
-            else if(count==1){
                 savedata(shopName)
-                count=count+1
-                savecount(count)
-                loadData()
-                Log.e("Checking","Is time last name is value hai ${firstshop}")
-                val x = OrderDetail(name!!, price, imageUrl, description, shopName)
-                Log.e("Checking","count==0 se add hua h : $shopName")
-                viewModel.insertCart(x)
             }
         }
+        refreshView()
+    }
+
+    fun refreshView(){
+        minimumOrder.visibility = View.GONE
+        cartRecyclerView.visibility = View.GONE
+        totalPrice.visibility = View.GONE
+        ShopClosed.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+        emptyMessage.visibility = View.GONE
+        orderNow.visibility = View.INVISIBLE
+        updatePrice()
+        val sharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
+        val delivery = sharedPreferences.getInt("delivery",0)
+        val minimum = sharedPreferences.getInt("Minimum", 0)
+        val q= adapter.itemCount
+        Log.e("Checking","q is ${adapter.itemCount}")
+        if(q>=2){
+            cartRecyclerView.visibility = View.VISIBLE
+            if(a+delivery>=minimum){
+                getMyData()
+            }
+            else{
+                minimumOrder.text = "Minimum order should be atleast ₹${minimum}"
+                minimumOrder.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+            }
+        }
+        else{
+            emptyMessage.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+        }
+
     }
 
     fun getMyData():String {
+        nothing.visibility = View.VISIBLE
         orderNow.visibility = View.INVISIBLE
         ShopClosed.visibility= View.GONE
         minimumOrder.visibility = View.GONE
-        var p:Double=0.0
+        progressBar.visibility = View.VISIBLE
+        var p = 0.0
         val retrofitBuilder = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://api.timezonedb.com/")
@@ -187,20 +197,14 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
                 val sharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
                 val open = sharedPreferences.getString("open", "0.0")!!.toDouble()
                 val close = sharedPreferences.getString("close", "0.0")!!.toDouble()
-                val minimum = sharedPreferences.getInt("Minimum", 0)
-                if(a<minimum){
-                    minimumOrder.text = "Minimum Order Should Be Of ₹$minimum"
-                    minimumOrder.visibility = View.VISIBLE
-                }
-                else if(count!=1) {
+
                     if (p > open && p < close) {
                         orderNow.visibility = View.VISIBLE
-                        ShopClosed.visibility = View.INVISIBLE
                     } else {
                         ShopClosed.visibility = View.VISIBLE
-                        orderNow.visibility = View.INVISIBLE
                     }
-                }
+                    totalPrice.visibility = View.VISIBLE
+                    cartRecyclerView.visibility=View.VISIBLE
                 progressBar.visibility = View.GONE
                 nothing.visibility = View.GONE
             }
@@ -228,60 +232,71 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
                 adapter.cartItem[position].EachShopName, num)
             viewModel.updateCart(x)
         }
-        GlobalScope.launch(Dispatchers.IO) {
-            getMyData()
-        }
+        nothing.visibility = View.GONE
     }
 
     override fun onMinusClick(position: Int, num: Int, view: View) {
         nothing.visibility = View.VISIBLE
         progressBar.visibility = View.VISIBLE
+        Log.e("Checking", "Num is $num")
         if(num==0){
-            viewModel.deleteCart(adapter.cartItem[position])
-            count-=1
-            savecount(count)
-            loadData()
-            Log.e("Checking","Count -> ${count}")
+            GlobalScope.launch(Dispatchers.IO) {
+                viewModel.deleteCart(adapter.cartItem[position])
+            }
         }
         else {
             val x = OrderDetail(adapter.cartItem[position].EachFoodName, adapter.cartItem[position].EachFoodPrice,
                 adapter.cartItem[position].EachFoodUrl, adapter.cartItem[position].EachFoodDes,
                 adapter.cartItem[position].EachShopName,num)
-//            x.id = adapter.cartItem[position].id
             viewModel.updateCart(x)
         }
+        nothing.visibility = View.GONE
+    }
+
+    override fun onQuantityClick(position: Int, value: String, view: View) {
+        Toast.makeText(applicationContext, "Quantity Changed", Toast.LENGTH_SHORT).show()
         GlobalScope.launch(Dispatchers.IO) {
-            getMyData()
+            val a: Int = Integer.valueOf(value)
+            if(a!=0) {
+                val x = OrderDetail(
+                    adapter.cartItem[position].EachFoodName,
+                    adapter.cartItem[position].EachFoodPrice,
+                    adapter.cartItem[position].EachFoodUrl,
+                    adapter.cartItem[position].EachFoodDes,
+                    adapter.cartItem[position].EachShopName,
+                    a
+                )
+                viewModel.updateCart(x)
+            }
+            else{
+                val x = OrderDetail(
+                    adapter.cartItem[position].EachFoodName,
+                    adapter.cartItem[position].EachFoodPrice,
+                    adapter.cartItem[position].EachFoodUrl,
+                    adapter.cartItem[position].EachFoodDes,
+                    adapter.cartItem[position].EachShopName,
+                    adapter.cartItem[position].quantity
+                )
+                viewModel.deleteCart(x)
+            }
+                try {
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+                } catch (e: Exception) {
+
+                }
         }
     }
 
     private fun updatePrice(){
         val totalNumber = adapter.cartItem.size-1
-        a=0
+        a=0.0
         for( i in 0..totalNumber){
-            a += Integer.valueOf(adapter.cartItem[i].EachFoodPrice)*adapter.cartItem[i].quantity!!
+            a += adapter.cartItem[i].EachFoodPrice!!.toDouble()*adapter.cartItem[i].quantity!!
         }
         val sharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
         val delivery = sharedPreferences.getInt("delivery",0)
         totalPrice.text = "₹${a+delivery}"
-    }
-
-    fun loadData(){
-        val sharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
-        firstshop = sharedPreferences.getString("last", "")!!
-        count = sharedPreferences.getInt("count", 1)
-        if(count==1){
-            cartRecyclerView.visibility = View.GONE
-            orderNow.visibility = View.INVISIBLE
-            ShopClosed.visibility = View.GONE
-            emptyMessage.visibility= View.VISIBLE
-            progressBar.visibility = View.GONE
-        }
-        else{
-            cartRecyclerView.visibility = View.VISIBLE
-            emptyMessage.visibility = View.GONE
-        }
-        Log.e("Checking","LoadData Count is $count")
     }
     fun savedata(x:String){
         val sharedPreferences: SharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
@@ -289,16 +304,13 @@ class CartActivity : AppCompatActivity(), ICartAdapter {
         editor.putString("last", x)
         editor.apply()
     }
-
-    fun savecount(count:Int){
+    fun loadData(){
         val sharedPreferences: SharedPreferences = getSharedPreferences(SHARED_PRE, MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putInt("count",count)
-        editor.apply()
+        firstshop = sharedPreferences.getString("last", "")!!
     }
+
     override fun onPause() {
         super.onPause()
-        savecount(count)
         savedata(firstshop)
     }
 
