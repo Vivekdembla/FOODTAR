@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Snacks Bar</string>
+    <string name="Interstitial">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="bannerAd">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

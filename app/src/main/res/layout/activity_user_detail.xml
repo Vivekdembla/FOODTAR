@@ -1,46 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userDetail">
-
-    <ImageView
+    tools:context=".userDetail"
+    android:orientation="vertical"
+    android:background="#E6000000">
+    <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/progress_bar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
+    <ScrollView
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="#E6000000"/>
-
+        android:layout_height="wrap_content"
+        android:paddingBottom="80dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name:"
         android:textSize="20dp"
+        android:layout_marginTop="40dp"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:id="@+id/Naam"
-        app:layout_constraintTop_toTopOf="@id/NaamEditText"
-        app:layout_constraintBottom_toBottomOf="@id/NaamEditText"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="10dp"
         />
 
+
     <EditText
         android:id="@+id/NaamEditText"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/allroundedge"
         android:backgroundTint="@color/column"
-        android:minHeight="50dp"
         android:padding="15dp"
         android:text=""
-        android:textAlignment="center"
-        app:layout_constraintLeft_toRightOf="@id/PhoneNumber"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        android:textAlignment="center" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,31 +67,30 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:id="@+id/PhoneNumber"
-        app:layout_constraintTop_toTopOf="@id/PhoneEditText"
-        app:layout_constraintBottom_toBottomOf="@id/PhoneEditText"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp"
         />
 
     <EditText
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/allroundedge"
-        app:layout_constraintLeft_toRightOf="@id/PhoneNumber"
-        app:layout_constraintRight_toRightOf="parent"
         android:backgroundTint="@color/column"
-        android:layout_marginLeft="10dp"
-        android:minHeight="50dp"
         android:text=""
-        app:layout_constraintTop_toBottomOf="@id/NaamEditText"
         android:layout_marginTop="40dp"
         android:id="@+id/PhoneEditText"
         android:textAlignment="center"
         android:padding="15dp"
         android:inputType="number"
         android:hint="10 digit number"
-        android:maxLength="10"/>
+        android:maxLength="10"
+        android:layout_marginLeft="10dp"/>
+</LinearLayout>
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -82,28 +99,28 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:id="@+id/HouseNo"
-        app:layout_constraintTop_toTopOf="@id/HouseNoEditText"
-        app:layout_constraintBottom_toBottomOf="@id/HouseNoEditText"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
         />
 
     <EditText
-        android:layout_width="0dp"
+        android:layout_weight="30"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/allroundedge"
-        app:layout_constraintLeft_toRightOf="@id/PhoneNumber"
-        app:layout_constraintRight_toRightOf="parent"
         android:backgroundTint="@color/column"
-        android:layout_marginLeft="10dp"
-        android:minHeight="50dp"
         android:text=""
-        app:layout_constraintTop_toBottomOf="@id/PhoneEditText"
         android:layout_marginTop="40dp"
         android:id="@+id/HouseNoEditText"
         android:textAlignment="center"
-        android:padding="15dp"/>
-
+        android:padding="15dp"
+        android:layout_marginLeft="10dp"/>
+</LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,62 +133,85 @@
         app:layout_constraintBottom_toBottomOf="@id/landmarkEditText"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp"
         />
 
     <EditText
-        android:layout_width="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/allroundedge"
-        app:layout_constraintLeft_toRightOf="@id/PhoneNumber"
         app:layout_constraintRight_toRightOf="parent"
         android:backgroundTint="@color/column"
-        android:layout_marginLeft="10dp"
         android:minHeight="50dp"
         android:text=""
-        app:layout_constraintTop_toBottomOf="@id/HouseNoEditText"
         android:layout_marginTop="40dp"
         android:id="@+id/landmarkEditText"
         android:textAlignment="center"
         android:padding="15dp"/>
+</LinearLayout>
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/specialMessageEditText"
+        app:layout_constraintBottom_toBottomOf="@id/specialMessageEditText"
+        app:layout_constraintLeft_toLeftOf="@id/Landmark"
+        android:text="Message: "
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:id="@+id/specialMessage"
+        android:layout_marginTop="40dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/column"
+        android:background="@drawable/allroundedge"
+        android:minHeight="50dp"
+        android:id="@+id/specialMessageEditText"
+        android:hint="Add soft drinks or any message for owner here"
+        android:textAlignment="center"
+        android:padding="15dp"
+        android:layout_marginTop="40dp"
+        android:maxHeight="100dp"
+        android:text=""
+        android:layout_marginLeft="10dp"/>
+</LinearLayout>
+
+    </LinearLayout>
+    </ScrollView>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/lessrounded"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
         app:backgroundTint="@color/white"
         android:text="Confirm Order"
         android:textColor="@color/black"
         android:id="@+id/submit"
         android:padding="10dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="10dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/lessrounded"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="10dp"
         app:backgroundTint="@color/white"
         android:text="Cancel"
         android:textColor="@color/black"
         android:id="@+id/cancel"
-        android:textStyle="bold"/>
-
-    <ProgressBar
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/progress_bar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone"/>
-
-
+        app:layout_constraintLeft_toLeftOf= "parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

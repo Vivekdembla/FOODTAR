@@ -1,10 +1,85 @@
 {
   "project_info": {
     "project_number": "838551808217",
+    "firebase_url": "https://vegtar-f0ecc-default-rtdb.firebaseio.com",
     "project_id": "vegtar-f0ecc",
     "storage_bucket": "vegtar-f0ecc.appspot.com"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838551808217:android:0ea66835e96558a78036c8",
+        "android_client_info": {
+          "package_name": "com.food.shopowner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838551808217-hh5jhudrorkb0gt7nqftsa068641u4mr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.food.shopowner",
+            "certificate_hash": "fdb59587c6f34afae0bb469e0c4fffcabc86f43d"
+          }
+        },
+        {
+          "client_id": "838551808217-mg9ih4jfa604ud8ta87g785t35ma19gj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALCIaLWwCYstYbJ4pyYkkdK4Geez5pFfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838551808217-mg9ih4jfa604ud8ta87g785t35ma19gj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838551808217:android:1e563366e0beeec88036c8",
+        "android_client_info": {
+          "package_name": "com.food.testing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838551808217-o0300jl7r17a2papop4dnle8t080ji39.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.food.testing",
+            "certificate_hash": "fdb59587c6f34afae0bb469e0c4fffcabc86f43d"
+          }
+        },
+        {
+          "client_id": "838551808217-mg9ih4jfa604ud8ta87g785t35ma19gj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALCIaLWwCYstYbJ4pyYkkdK4Geez5pFfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838551808217-mg9ih4jfa604ud8ta87g785t35ma19gj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:838551808217:android:7aba697d0c195ad38036c8",
@@ -13,6 +88,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "838551808217-qd5qjubbkbbh20hu7nf9icj9285lsabr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.food.vegtar",
+            "certificate_hash": "02cf19548e024d6375af7e0df2b9d91c19a674cf"
+          }
+        },
         {
           "client_id": "838551808217-mg9ih4jfa604ud8ta87g785t35ma19gj.apps.googleusercontent.com",
           "client_type": 3

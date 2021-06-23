@@ -51,6 +51,7 @@
         app:layout_constraintRight_toLeftOf="@id/price"
         android:text="Medium"
         android:maxEms="15"
+        android:maxLines="3"
         android:textColor="#D7FFFFFF"
         android:layout_marginRight="5dp"/>
 

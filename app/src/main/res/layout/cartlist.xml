@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
+    android:layout_height="120dp"
     android:paddingVertical="5dp"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -48,7 +48,23 @@
         android:textColor="@color/white"
         app:layout_constraintRight_toLeftOf="@id/subtract"
         android:layout_marginRight="5dp"
+        android:maxLines="2"
+        android:text=""
+        android:textSize="12dp"
         />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/shopkanaam"
+        app:layout_constraintBottom_toBottomOf="@id/cartBack"
+        app:layout_constraintLeft_toLeftOf="@id/ordername"
+        app:layout_constraintRight_toLeftOf="@id/subtract"
+        android:textColor="@color/white"
+        android:text="Shop Name"
+        android:maxLines="1"
+        android:textSize="14dp"
+        android:layout_marginBottom="12dp"/>
 
     <Button
         android:layout_width="30dp"
@@ -68,13 +84,15 @@
         app:layout_constraintRight_toLeftOf="@id/add"
         android:textSize="18dp"
         android:id="@+id/quantity"
-        android:text="22"
+        android:text="2"
+        android:maxLength="4"
         android:inputType="number"
         app:layout_constraintTop_toTopOf="@id/add"
         android:layout_marginRight="5dp"
         app:layout_constraintBottom_toBottomOf="@id/add"
         android:textColor="@color/white"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="actionDone"
+        android:backgroundTint="@color/white"/>
 
     <Button
         android:layout_width="25dp"
